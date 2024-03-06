@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Gestionnaire de contact</title>
+        <!-- Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+        <!-- Bootstrap Icon -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <!-- CSS perso -->
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body data-bs-theme="dark">
+        <!-- HERO -->
+        <div id="hero" class="container col-xl-10 col-xxl-8 px-4 py-5 vh-100 d-flex align-items-center">
+            <div class="row align-items-center g-lg-5 py-5">
+                <!-- WELCOME -->
+                <div class="col-lg-7 text-center text-lg-start">
+                    <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">Gestionnaire de contact</h1>
+                    <p class="col-lg-10 fs-4">Vous pouvez ajouter un contact en utilisant le formulaire ci-contre.</p>
+                </div>
+                <div class="col-md-10 mx-auto col-lg-5">
+                    <!-- FORM -->
+                    <form id="add-contact" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
+                        <!-- Input firstname -->
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Prénom" />
+                            <label for="firstname">Prénom</label>
+                        </div>
+                        
+                         <!-- Input lastname -->
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Nom" />
+                            <label for="lastname">Nom</label>
+                        </div>
+                        <!-- Button sumbit -->
+                        <button class="w-100 btn btn-lg btn-primary" type="submit">Ajouter</button>
+                        <hr class="my-4" />
+                        <!-- Button de type a pour afficher les contacts -->
+                        <a href="" id="toggle-contacts" class="w-100 btn btn-lg btn-secondary">Voir les contacts</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="container border-top">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4">
+                <div class="col-md-4 d-flex align-items-center">
+                    <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+                        <img class="img-fluid fs-3" src="https://www.gregdesplaces.com/pluginfile.php/1/core_admin/logocompact/300x300/1709369680/blue-round.png" alt="Logo GD" width="32" />
+                    </a>
+                    <span class="mb-3 mb-md-0 text-body-secondary">© 2024 Greg Desplaces</span>
+                </div>
+
+                <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                    <li class="ms-3">
+                        <a class="text-body-secondary fs-4" href="#"><i class="bi bi-github"></i></a>
+                    </li>
+                    <li class="ms-3">
+                        <a class="text-body-secondary fs-4" href="#"><i class="bi bi-gitlab"></i></a>
+                    </li>
+                    <li class="ms-3">
+                        <a class="text-body-secondary fs-4" href="#"><i class="bi bi-linkedin"></i></a>
+                    </li>
+                </ul>
+            </footer>
+        </div>
+
+        <!-- TOAST -->
+        <div class="toast-container bottom-0 start-0 p-3 d-block">
+            <div id="gc-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <!-- Icon bootstrap -->
+                    <i class="bi me-2"></i>
+                    <!-- Titre -->
+                    <strong class="me-auto">Bootstrap</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <!-- Content -->
+                <div class="toast-body">Hello, world! This is a toast message.</div>
+            </div>
+        </div>
+
+        <!-- Bootstrap -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <!-- Script perso -->
+        <script src="app.js" type="module"></script>
+    </body>
+</html>

@@ -1,0 +1,35 @@
+/* import abel and scout bold from Google font */
+@import url('https://fonts.googleapis.com/css2?family=Abel&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+
+
+/* Define font-family bootstrap variable */
+:root {
+    --bs-font-sans-serif: "Source Sans 3", sans-serif;
+    --gc-font-headings: 'Abel', sans-serif;
+    --gc-blue: #577c8f;
+    --gc-blue-dark: #3e5f6f;
+}
+
+h1, h2, h3, h4, h5, h6, .btn {
+    font-family: var(--gc-font-headings);
+}
+
+.btn-primary {
+    background-color: var(--gc-blue);
+    border-color: var(--gc-blue);
+}
+
+.btn-primary:hover,
+.btn:active {
+    background-color: var(--gc-blue-dark) !important;
+    border-color: var(--gc-blue-dark) !important;
+}
+
+.border-primary {
+    border-color: var(--gc-blue) !important;
+}
+
+.text-primary {
+    color: var(--gc-blue);
+}
