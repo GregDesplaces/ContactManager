@@ -160,6 +160,12 @@ function createThead(allLabels) {
     return thead;
 }
 
+/**
+ * Crée un élément tbody et ses enfants
+ * 
+ * @param {Contact[]} allContacts - Le tableau de contacts
+ * @returns {HTMLTableSectionElement} - Retourne un élément tbody avec les contacts
+ */
 function createTbody(allContacts) {
     const tbody = document.createElement('tbody');
 
@@ -182,6 +188,13 @@ function createTbody(allContacts) {
     return tbody;
 }
 
+/**
+ * Crée un container avec un titre et un tableau de contacts
+ * 
+ * @param {SubmitEvent | undefined} e -  L'événement de soumission du formulaire ou undefined
+ * 
+ * @returns {void}
+ */
 function createContactsTableContainer(e) {
 	  const buttonContact = document.querySelector('#toggle-contacts');
     // J'annule l'action par defaut du lien
