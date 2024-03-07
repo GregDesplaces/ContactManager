@@ -98,8 +98,29 @@ function validateInput(input) {
     return true;
 }
 
+function formatName(input) {
+    // Je trime la valeur de l'input
+    input.value = input.value.trim();
+    // Je vérifie si c'est un espace qui sépare le nom
+    let isSpaceSeparatorForLastName = (input.value.includes(' ') && input.name === 'lastname');
+
+    // Si c'est une chaine de caractère avec un espace ou un tiret, je le splitte et je mets les mots dans un tableau
+    if (input.value.match(/\s-/)) input = input.value.split(/[\s-]/);
+
+    // Si c'est un tableau
+    if (Array.isArray(input)) {
+        // Je mets la première lettre en majuscule et le reste en minuscule
+        for (let i = 0; i < input.length; i++) {
+            input[i] = input[i].charAt(0).toUpperCase() + input[i].slice(1).toLowerCase();
+        }
+        return (isSpaceSeparatorForLastName) ?  input.join(' ') : input.join('-');
+    } else {
+        // Je mets la première lettre en majuscule et le reste en minuscule
+        return input.value.charAt(0).toUpperCase() + input.value.slice(1).toLowerCase();
+    }
+}
 /**
- * Ajoute un une instance de Contact dans le tableau contacts
+ * Ajoute une instance de Contact dans le tableau contacts
  *
  * @param {SubmitEvent} e - L'événement de soumission du formulaire
  * @returns {boolean} - Retourne false si un des inputs n'est pas valide et true si tout est bon
@@ -115,7 +136,8 @@ function addContact(e) {
     for (let input of inputs) {
         let isValid = validateInput(input);
         if (!isValid) return false;
-        newContactProperties.push(input.value);
+        let formattedValue = formatName(input);
+        newContactProperties.push(formattedValue);
     }
 
     // J'ai les nouvelles propriétés du contact dans l'ordre qui correspond à l'ordre des inputs (il faudra donc respecter cet ordre dans le HTML pour que ça corresponde au constructeur de la classe Contact)
@@ -145,7 +167,7 @@ function createThead(allLabels) {
     // TODO: Utiliser les label des inputs pour les th
     const thValues = ['#'];
 
-    // Je rejoute au tableau thValues les textContent des labels
+    // Je rajoute au tableau thValues les textContent des labels
     for (let label of allLabels) {
         thValues.push(label.textContent);
     }
@@ -171,10 +193,10 @@ function createTbody(allContacts) {
 
     for (let i = 0; i < allContacts.length; i++) {
         const tr = document.createElement('tr');
-        // J'initilise le Th qui prendra comme valeur i + 1 pour numéroter les contacts
+        // J'initialise le Thead qui prendra comme valeur i + 1 pour numéroter les contacts
         const th = document.createElement('th');
         th.scope = 'row';
-        th.textContent = i + 1;
+        th.textContent = String(i + 1);
         tr.appendChild(th);
 
         for (let property in allContacts[i]) {
@@ -191,13 +213,13 @@ function createTbody(allContacts) {
 /**
  * Crée un container avec un titre et un tableau de contacts
  * 
- * @param {SubmitEvent | undefined} e -  L'événement de soumission du formulaire ou undefined
+ * @param {SubmitEvent | null} e - L'événement de soumission du formulaire ou null
  * 
  * @returns {void}
  */
-function createContactsTableContainer(e) {
+function createContactsTableContainer(e =null) {
 	  const buttonContact = document.querySelector('#toggle-contacts');
-    // J'annule l'action par defaut du lien
+    // J'annule l'action par défaut du lien
     let isButtonShowContacts;
     log(buttonContact.textContent);
     if (e) {
@@ -213,7 +235,7 @@ function createContactsTableContainer(e) {
 			document.querySelector('#contacts-container').remove()
 			document.body.scrollIntoView({ behavior: 'smooth' });
 			buttonContact.textContent = 'Voir les contacts';
-		};
+    }
 
     if (isButtonShowContacts) {
         // Je crée les éléments container, titre et table
