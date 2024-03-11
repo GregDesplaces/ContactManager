@@ -182,6 +182,8 @@ function addContact(e) {
     // Je mets le focus sur le premier input
     inputs[0].focus();
 
+    console.log(contacts)
+
     return true;
 }
 
@@ -236,9 +238,11 @@ function createTbody(allContacts) {
 
         for (let property in allContacts[i]) {
             const td = document.createElement('td');
+            // Je cherche la langue du navigateur
+            const lang = document.documentElement.lang;
             // Si la propriété est createdAt, je formate la date
             if (property === 'createdAt') {
-                td.textContent = allContacts[i][property].toLocaleDateString("fr-FR", {
+                td.textContent = allContacts[i][property].toLocaleDateString(lang, {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
