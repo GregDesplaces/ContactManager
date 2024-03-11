@@ -12,6 +12,7 @@ class Contact {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
+        this.createdAt = new Date();
     }
     /**
      *
@@ -171,6 +172,7 @@ function addContact(e) {
     // Je crée le nouveau contact en utilisant le spread operator
     const newContact = new Contact(...contactProperties);
     contacts.push(newContact);
+    console.log(contacts);
     launchBootstrapToast('Contact ajouté', `Le contact ${newContact.getFullName()} a été ajouté avec succès`, true);
 
     createContactsTableContainer();
@@ -191,12 +193,16 @@ function addContact(e) {
 function createThead(allLabels) {
     const thead = document.createElement('thead');
     const tr = document.createElement('tr');
+    // Tableau des future valeurs des th
     const thValues = ['#'];
 
     // Je rajoute au tableau thValues les textContent des labels
     for (let label of allLabels) {
         thValues.push(label.textContent);
     }
+    
+    // J'ajoute la valeur 'Créé le' pour le th de la date de création
+    thValues.push('Créé le');
 
     for (let value of thValues) {
         const thElement = document.createElement('th');
@@ -204,6 +210,9 @@ function createThead(allLabels) {
         thElement.textContent = value;
         tr.appendChild(thElement);
     }
+
+
+
     thead.appendChild(tr);
     return thead;
 }
@@ -227,7 +236,19 @@ function createTbody(allContacts) {
 
         for (let property in allContacts[i]) {
             const td = document.createElement('td');
-            td.textContent = allContacts[i][property];
+            // Si la propriété est createdAt, je formate la date
+            if (property === 'createdAt') {
+                td.textContent = allContacts[i][property].toLocaleDateString("fr-FR", {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            } else  {
+                td.textContent = allContacts[i][property];
+            }
             tr.appendChild(td);
         }
         tbody.appendChild(tr);
@@ -243,14 +264,13 @@ function createTbody(allContacts) {
  * 
  * @returns {void}
  */
-function createContactsTableContainer(e =null) {
-	  const buttonContact = document.querySelector('#toggle-contacts');
+function createContactsTableContainer(e = null) {
+	const buttonContact = document.querySelector('#toggle-contacts');
     // J'annule l'action par défaut du lien
     let isButtonShowContacts;
     if (e) {
         e.preventDefault();
         isButtonShowContacts = buttonContact.textContent === 'Voir les contacts';
-        log(isButtonShowContacts);
     } else {
         isButtonShowContacts = true;
     }
@@ -290,9 +310,10 @@ function createContactsTableContainer(e =null) {
         container.scrollIntoView({ behavior: 'smooth' });
 
         // je change le texte du bouton
-				buttonContact.textContent = 'Masquer les contacts';
+		buttonContact.textContent = 'Masquer les contacts';
     }
 }
+
 
 // Je récupère le formulaire et à sa soumission, je lance une fonction qui ajoutera le contact dans le tableau
 document.querySelector('form#add-contact').addEventListener('submit', addContact);
