@@ -8,9 +8,10 @@ class Contact {
      * @param {string} firstname - Prénom du contact
      * @param {string} lastname - Nom du contact
      */
-    constructor(firstname, lastname) {
+    constructor(firstname, lastname, email) {
         this.firstname = firstname;
         this.lastname = lastname;
+        this.email = email;
     }
     /**
      *
@@ -32,12 +33,13 @@ class Contact {
 // }
 
 // Je crée deux instances de Contact
-const mNelsonne = new Contact('Mélodie', 'Nelsonne');
-const cLevisse = new Contact('Carole', 'Levisse');
+const mNelsonne = new Contact('Mélodie', 'Nelsonne', 'mnelsonne@email.com');
+const cLevisse = new Contact('Carole', 'Levisse', 'clevisse@email.com');
 
 // const melodieFullName = mNelsonne.getFullName();
 // console.log(melodieFullName);
 
+// TODO: Créer une classe ContactManager qui contiendra un tableau de contacts et des méthodes pour ajouter, supprimer et modifier des contacts
 const contacts = [mNelsonne, cLevisse];
 // console.log(contacts);
 
@@ -88,9 +90,17 @@ function validateInput(input) {
         case 'lastname':
             // Si la valeur de l'input est vide
             if (input.value.length < 2) {
-                // TODO: Mettre un toast à la place de l'alerte
                 launchBootstrapToast(`Erreur sur le ${input.nextElementSibling.textContent}`, `Le ${input.nextElementSibling.textContent} doit contenir au moins 2 caractères`, false);
                 // Je mets le focus sur l'input
+                input.focus();
+                return false;
+            }
+            break;
+        case 'email':
+            const regex = /^[a-z0-9][a-z0-9-_\.]{3,60}@[a-z0-9][a-z0-9-_\.]{2,60}(\.[a-z]{2,5})$/;
+            const isEmailValid = regex.test(input.value);
+            if (!isEmailValid) {
+                launchBootstrapToast(`Erreur sur l'email`, `L'email ${input.value} n'est pas valide`, false);
                 input.focus();
                 return false;
             }
@@ -98,27 +108,44 @@ function validateInput(input) {
     return true;
 }
 
+/**
+ * Format le valeurs des champs input
+ * 
+ * @param {HTMLInputElement} input - L'input avec la valeur à formater
+ * @returns  {string} - La valeur formatée
+ */
 function formatName(input) {
-    // Je trime la valeur de l'input
-    input.value = input.value.trim();
-    // Je vérifie si c'est un espace qui sépare le nom
-    let isSpaceSeparatorForLastName = (input.value.includes(' ') && input.name === 'lastname');
+    const value = input.value.trim();
 
-    // Si c'est une chaine de caractère avec un espace ou un tiret, je le splitte et je mets les mots dans un tableau
-    if (input.value.match(/\s-/)) input = input.value.split(/[\s-]/);
+    switch (input.name) {
+        case 'firstname':
+        case 'lastname':
+            // Si c'est un mot composé
+            if (/[-\s]/.test(value)) {
+                // Je vais tester si c'est un cxhamp lastname sans tiret
+                const isLastnameWithSpace = (input.name === 'lastname' && !value.includes('-'));
 
-    // Si c'est un tableau
-    if (Array.isArray(input)) {
-        // Je mets la première lettre en majuscule et le reste en minuscule
-        for (let i = 0; i < input.length; i++) {
-            input[i] = input[i].charAt(0).toUpperCase() + input[i].slice(1).toLowerCase();
-        }
-        return (isSpaceSeparatorForLastName) ?  input.join(' ') : input.join('-');
-    } else {
-        // Je mets la première lettre en majuscule et le reste en minuscule
-        return input.value.charAt(0).toUpperCase() + input.value.slice(1).toLowerCase();
+                const words = value.split(/[-\s]+/);
+                const formatedWords = [];
+                for (let word of words) {
+                    formatedWords.push(word[0].toUpperCase() + word.slice(1).toLowerCase());
+                }
+                // if (isLastnameWithSpace) {
+                //     return formatedWords.join(' ');
+                // } else {
+                //     return formatedWords.join('-');
+                // }
+                return (isLastnameWithSpace) ? formatedWords.join(' ') : formatedWords.join('-');
+            }
+            return value[0].toUpperCase() + value.slice(1).toLowerCase();
+        case 'email':
+            return value.toLowerCase();
+        default: 
+            return value;
     }
 }
+
+
 /**
  * Ajoute une instance de Contact dans le tableau contacts
  *
@@ -131,18 +158,18 @@ function addContact(e) {
 
     const inputs = this.querySelectorAll('input[type=text]');
 
-    const newContactProperties = [];
+    const contactProperties = [];
     // Je lance une fonction qui validera les inputs dans une boucle
     for (let input of inputs) {
         let isValid = validateInput(input);
         if (!isValid) return false;
-        let formattedValue = formatName(input);
-        newContactProperties.push(formattedValue);
+        const formatedName = formatName(input)
+        contactProperties.push(formatedName);
     }
 
     // J'ai les nouvelles propriétés du contact dans l'ordre qui correspond à l'ordre des inputs (il faudra donc respecter cet ordre dans le HTML pour que ça corresponde au constructeur de la classe Contact)
     // Je crée le nouveau contact en utilisant le spread operator
-    const newContact = new Contact(...newContactProperties);
+    const newContact = new Contact(...contactProperties);
     contacts.push(newContact);
     launchBootstrapToast('Contact ajouté', `Le contact ${newContact.getFullName()} a été ajouté avec succès`, true);
 
@@ -164,7 +191,6 @@ function addContact(e) {
 function createThead(allLabels) {
     const thead = document.createElement('thead');
     const tr = document.createElement('tr');
-    // TODO: Utiliser les label des inputs pour les th
     const thValues = ['#'];
 
     // Je rajoute au tableau thValues les textContent des labels
@@ -221,7 +247,6 @@ function createContactsTableContainer(e =null) {
 	  const buttonContact = document.querySelector('#toggle-contacts');
     // J'annule l'action par défaut du lien
     let isButtonShowContacts;
-    log(buttonContact.textContent);
     if (e) {
         e.preventDefault();
         isButtonShowContacts = buttonContact.textContent === 'Voir les contacts';
