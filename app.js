@@ -36,6 +36,7 @@ class Contact {
 // }
 
 // Je crée deux instances de Contact
+
 const mNelsonne = new Contact('Mélodie', 'Nelsonne', 'mnelsonne@email.com');
 const cLevisse = new Contact('Carole', 'Levisse', 'clevisse@email.com');
 
@@ -192,19 +193,12 @@ function addContact(e) {
  *
  * @returns {HTMLTableSectionElement} - Retourne un élément thead
  */
-function createThead(allLabels) {
+function createThead(...thValues) {
+    console.log(thValues);
+
+
     const thead = document.createElement('thead');
     const tr = document.createElement('tr');
-    // Tableau des future valeurs des th
-    const thValues = ['#'];
-
-    // Je rajoute au tableau thValues les textContent des labels
-    for (let label of allLabels) {
-        thValues.push(label.textContent);
-    }
-    
-    // J'ajoute la valeur 'Créé le' pour le th de la date de création
-    thValues.push('Créé le', 'Actions');
 
     for (let value of thValues) {
         const thElement = document.createElement('th');
@@ -212,8 +206,6 @@ function createThead(allLabels) {
         thElement.textContent = value;
         tr.appendChild(thElement);
     }
-
-
 
     thead.appendChild(tr);
     return thead;
@@ -351,7 +343,7 @@ function createContactsTableContainer(e = null) {
         // Je mets le titre dans le container
         title.textContent = 'Liste des contacts';
 
-        const thead = createThead(document.querySelectorAll('form#add-contact label'));
+        const thead = createThead('#', 'Prénom', 'Nom', 'Email', 'Créé le', 'Actions');
         // log(thead.firstChild.children);
         const tbody = createTbody(contacts);
 
