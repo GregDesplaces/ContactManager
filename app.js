@@ -220,6 +220,44 @@ function createThead(allLabels) {
 }
 
 /**
+ * Crée un bouton pour éditer et supprimer un contact
+ * Ajoute la suppression du contact au clic en se basant sur l'index du contact dans le tableau
+ * TODO: Ajouter la fonctionnalité de modification de contact
+ * 
+ * @param {number} index - L'index du contact dans le tableau
+ * @returns {HTMLTableDataCellElement} - Retourne un élément td avec les boutons
+ */
+function createActionsButton(index) {
+    // Je crée la cellule
+    const td = document.createElement('td');
+    // Je crée les boutons
+    const buttonEdit = document.createElement('i');
+    const buttonDelete = document.createElement('i');
+    // Je metrs les classes bootstrap
+    buttonEdit.classList.add('bi', 'bi-pencil', 'fs-4', 'text-primary', 'me-3');
+    buttonDelete.classList.add('bi', 'bi-trash', 'fs-4', 'text-danger' );
+    // Je rajoute le role bouton qui changera le curseur
+    buttonEdit.role = 'button';
+    buttonDelete.role = 'button';
+    // Je crée les événements
+    buttonEdit.addEventListener('click', function() {
+        launchBootstrapToast('Fonctionnalité à venir', `La fonctionnalité de modification de contact sera bientôt disponible`, false);
+    });
+
+    buttonDelete.addEventListener('click', function() {
+        // Je supprime le contact du tableau
+        contacts.splice(index, 1);
+        // Je recrée le tableau
+        createContactsTableContainer();
+        // Je lance un toast pour informer l'utilisateur
+        launchBootstrapToast('Contact supprimé', `Le contact a été supprimé avec succès`, true);
+    });
+    td.append(buttonEdit, buttonDelete );
+    return td;
+}
+
+
+/**
  * Crée un élément tbody et ses enfants
  * 
  * @param {Contact[]} allContacts - Le tableau de contacts
@@ -271,34 +309,6 @@ function createTbody(allContacts) {
     return tbody;
 }
 
-function createActionsButton(contact, index) {
-    // Je crée la cellule
-    const td = document.createElement('td');
-    // Je crée les boutons
-    const buttonEdit = document.createElement('i');
-    const buttonDelete = document.createElement('i');
-    // Je metrs les classes bootstrap
-    buttonEdit.classList.add('bi', 'bi-pencil', 'fs-4', 'text-primary', 'me-3');
-    buttonDelete.classList.add('bi', 'bi-trash', 'fs-4', 'text-danger' );
-    // Je rajoute le role bouton qui changera le curseur
-    buttonEdit.role = 'button';
-    buttonDelete.role = 'button';
-    // Je crée les événements
-    buttonEdit.addEventListener('click', function() {
-        launchBootstrapToast('Fonctionnalité à venir', `La fonctionnalité de modification de contact sera bientôt disponible`, false);
-    });
-
-    buttonDelete.addEventListener('click', function() {
-        // Je supprime le contact du tableau
-        contacts.splice(index, 1);
-        // Je recrée le tableau
-        createContactsTableContainer();
-        // Je lance un toast pour informer l'utilisateur
-        launchBootstrapToast('Contact supprimé', `Le contact a été supprimé avec succès`, true);
-    });
-    td.append(buttonEdit, buttonDelete );
-    return td;
-}
 
 /**
  * Crée un container avec un titre et un tableau de contacts
