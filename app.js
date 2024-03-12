@@ -9,6 +9,8 @@ class Contact {
      * @param {string} lastname - Nom du contact
      */
     constructor(firstname, lastname, email) {
+        // J'ajoute un id unique à chaque contact avec un symbole
+        this.id = Symbol();
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -182,8 +184,6 @@ function addContact(e) {
     // Je mets le focus sur le premier input
     inputs[0].focus();
 
-    console.log(contacts)
-
     return true;
 }
 
@@ -204,7 +204,7 @@ function createThead(allLabels) {
     }
     
     // J'ajoute la valeur 'Créé le' pour le th de la date de création
-    thValues.push('Créé le');
+    thValues.push('Créé le', 'Actions');
 
     for (let value of thValues) {
         const thElement = document.createElement('th');
@@ -241,24 +241,63 @@ function createTbody(allContacts) {
             // Je cherche la langue du navigateur
             const lang = document.documentElement.lang;
             // Si la propriété est createdAt, je formate la date
-            if (property === 'createdAt') {
-                td.textContent = allContacts[i][property].toLocaleDateString(lang, {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                });
-            } else  {
-                td.textContent = allContacts[i][property];
+            switch (property) {
+                case 'id':
+                    // Je ne veux pas afficher l'id, donc je passe à la prochaine itération
+                    continue;
+                case 'createdAt':
+                    td.textContent = allContacts[i][property].toLocaleDateString(lang, {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+                    break;
+                default :
+                    td.textContent = allContacts[i][property];
             }
             tr.appendChild(td);
         }
+
+        // Je crée un bouton pour supprimer le contact
+        const tdActionButton = createActionsButton(contacts[i], i)
+        tr.appendChild(tdActionButton);
+
         tbody.appendChild(tr);
     }
 
     return tbody;
+}
+
+function createActionsButton(contact, index) {
+    // Je crée la cellule
+    const td = document.createElement('td');
+    // Je crée les boutons
+    const buttonEdit = document.createElement('i');
+    const buttonDelete = document.createElement('i');
+    // Je metrs les classes bootstrap
+    buttonEdit.classList.add('bi', 'bi-pencil', 'fs-4', 'text-primary', 'me-3');
+    buttonDelete.classList.add('bi', 'bi-trash', 'fs-4', 'text-danger' );
+    // Je rajoute le role bouton qui changera le curseur
+    buttonEdit.role = 'button';
+    buttonDelete.role = 'button';
+    // Je crée les événements
+    buttonEdit.addEventListener('click', function() {
+        launchBootstrapToast('Fonctionnalité à venir', `La fonctionnalité de modification de contact sera bientôt disponible`, false);
+    });
+
+    buttonDelete.addEventListener('click', function() {
+        // Je supprime le contact du tableau
+        contacts.splice(index, 1);
+        // Je recrée le tableau
+        createContactsTableContainer();
+        // Je lance un toast pour informer l'utilisateur
+        launchBootstrapToast('Contact supprimé', `Le contact a été supprimé avec succès`, true);
+    });
+    td.append(buttonEdit, buttonDelete );
+    return td;
 }
 
 /**
